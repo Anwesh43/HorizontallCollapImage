@@ -20,6 +20,9 @@ public class HorizontalCollapImageView extends View{
     private Bitmap bitmap;
     private int time = 0,w,h,color = Color.parseColor("#3949AB");
     private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private AnimationHandler animationHandler;
+    private CollapImage collapImage;
+    private Indicator indicator;
     public HorizontalCollapImageView(Context context, Bitmap bitmap) {
         super(context);
         this.bitmap = bitmap;
@@ -29,24 +32,31 @@ public class HorizontalCollapImageView extends View{
             w = canvas.getWidth();
             h = canvas.getHeight();
             bitmap = Bitmap.createScaledBitmap(bitmap,4*w/5,4*h/5,true);
+            animationHandler = new AnimationHandler();
+            collapImage = new CollapImage();
+            indicator = new Indicator();
         }
         paint.setColor(color);
+        collapImage.draw(canvas);
+        indicator.draw(canvas);
         time++;
     }
     public void update(float factor) {
+        collapImage.update(factor);
+        indicator.update(factor);
         postInvalidate();
     }
     public boolean onTouchEvent(MotionEvent event) {
         if(event.getAction() == MotionEvent.ACTION_DOWN) {
-
+            animationHandler.start();
         }
         return true;
     }
     private class CollapImage {
         private float x,y,scale = 0;
-        public CollapImage(float x,float y) {
-            this.x = x;
-            this.y = y;
+        public CollapImage() {
+            this.x = w/2;
+            this.y = h/2;
         }
         public void draw(Canvas canvas) {
             int bw = bitmap.getWidth()/2,bh = bitmap.getHeight()/2;
