@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -59,6 +60,28 @@ public class HorizontalCollapImageView extends View{
         }
         public void update(float factor) {
             scale = factor;
+        }
+    }
+    private class Indicator {
+        private float x,y,r,a = 0;
+        public Indicator() {
+            x = w/2;
+            y = 5*h/6+h/12;
+            r = h/15;
+        }
+        public void draw(Canvas canvas) {
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setColor(Color.argb(150,0,0,0));
+            canvas.drawRect(new RectF(w/10,5*h/6,9*h/10,h),paint);
+            paint.setColor(color);
+            canvas.save();
+            for(int i=0;i<2;i++) {
+                canvas.drawArc(new RectF(-r, -r, r, r), i*180, a,false, paint);
+            }
+            canvas.restore();
+        }
+        public void update(float factor) {
+            a = 180*factor;
         }
     }
 }
