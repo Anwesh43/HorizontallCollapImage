@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.RectF;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,7 +19,7 @@ import android.view.View;
 
 public class HorizontalCollapImageView extends View{
     private Bitmap bitmap;
-    private int time = 0,w,h,color = Color.parseColor("#3949AB");
+    private int time = 0,w,h,color = Color.BLUE;
     private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private AnimationHandler animationHandler;
     private CollapImage collapImage;
@@ -63,8 +64,12 @@ public class HorizontalCollapImageView extends View{
             paint.setStrokeWidth(bw/20);
             canvas.save();
             canvas.translate(x,y);
-            canvas.scale(scale,1);
+            canvas.save();
+            Path path = new Path();
+            path.addRect(new RectF(-bw*scale,-bh,bw*scale,bh), Path.Direction.CCW);
+            canvas.clipPath(path);
             canvas.drawBitmap(bitmap,-bw,-bh,paint);
+            canvas.restore();
             canvas.drawLine(-bw*scale,-bh,-bw*scale,bh,paint);
             canvas.drawLine(bw*scale,-bh,bw*scale,bh,paint);
             canvas.drawLine(-bw*scale,-bh,bw*scale,-bh,paint);
@@ -83,11 +88,15 @@ public class HorizontalCollapImageView extends View{
             r = h/15;
         }
         public void draw(Canvas canvas) {
-            paint.setStyle(Paint.Style.STROKE);
+            paint.setStyle(Paint.Style.FILL);
             paint.setColor(Color.argb(150,0,0,0));
-            canvas.drawRect(new RectF(w/10,5*h/6,9*h/10,h),paint);
+            canvas.drawRect(new RectF(w/10,y-h/12,9*h/10,h),paint);
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setColor(Color.GRAY);
+            canvas.drawCircle(x,y,r,paint);
             paint.setColor(color);
             canvas.save();
+            canvas.translate(x,y);
             for(int i=0;i<2;i++) {
                 canvas.drawArc(new RectF(-r, -r, r, r), i*180, a,false, paint);
             }
@@ -103,13 +112,14 @@ public class HorizontalCollapImageView extends View{
         private ValueAnimator startAnim = ValueAnimator.ofFloat(0,1),endAnim = ValueAnimator.ofFloat(1,0);
         public void start() {
             if(!isAnimated) {
+                isAnimated = true;
                 if(dir == 0) {
                     startAnim.start();
                 }
                 else {
                     endAnim.start();
                 }
-                isAnimated = true;
+
             }
         }
         public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -123,7 +133,7 @@ public class HorizontalCollapImageView extends View{
                 isAnimated = false;
             }
         }
-        public void AnimationHandler() {
+        public AnimationHandler() {
             startAnim.setDuration(500);
             endAnim.setDuration(500);
             startAnim.addUpdateListener(this);
