@@ -48,7 +48,7 @@ public class HorizontalCollapImageView extends View{
         postInvalidate();
     }
     public boolean onTouchEvent(MotionEvent event) {
-        if(event.getAction() == MotionEvent.ACTION_DOWN) {
+        if(event.getAction() == MotionEvent.ACTION_DOWN && indicator!=null && indicator.handleTap(event.getX(),event.getY())) {
             animationHandler.start();
         }
         return true;
@@ -86,6 +86,9 @@ public class HorizontalCollapImageView extends View{
             x = w/2;
             y = 5*h/6+h/12;
             r = h/15;
+        }
+        public boolean handleTap(float x,float y) {
+            return x>=this.x -r && x<=this.x+r && y>=this.y-r && y<=this.y+r;
         }
         public void draw(Canvas canvas) {
             paint.setStyle(Paint.Style.FILL);
