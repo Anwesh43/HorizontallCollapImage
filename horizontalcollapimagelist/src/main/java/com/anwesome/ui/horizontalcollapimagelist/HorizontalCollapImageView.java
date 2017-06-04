@@ -1,5 +1,8 @@
 package com.anwesome.ui.horizontalcollapimagelist;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -82,6 +85,41 @@ public class HorizontalCollapImageView extends View{
         }
         public void update(float factor) {
             a = 180*factor;
+        }
+    }
+    private class AnimationHandler extends AnimatorListenerAdapter implements ValueAnimator.AnimatorUpdateListener{
+        private boolean isAnimated = false;
+        private int dir = 0;
+        private ValueAnimator startAnim = ValueAnimator.ofFloat(0,1),endAnim = ValueAnimator.ofFloat(1,0);
+        public void start() {
+            if(!isAnimated) {
+                if(dir == 0) {
+                    startAnim.start();
+                }
+                else {
+                    endAnim.start();
+                }
+                isAnimated = true;
+            }
+        }
+        public void onAnimationUpdate(ValueAnimator valueAnimator) {
+            if(isAnimated) {
+                update((float)valueAnimator.getAnimatedValue());
+            }
+        }
+        public void onAnimationEnd(Animator animator) {
+            if(isAnimated) {
+                dir = dir == 0?1:0;
+                isAnimated = false;
+            }
+        }
+        public void AnimationHandler() {
+            startAnim.setDuration(500);
+            endAnim.setDuration(500);
+            startAnim.addUpdateListener(this);
+            endAnim.addUpdateListener(this);
+            startAnim.addListener(this);
+            endAnim.addListener(this);
         }
     }
 }
