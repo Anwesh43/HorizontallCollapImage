@@ -24,6 +24,10 @@ public class HorizontalCollapImageView extends View{
     private AnimationHandler animationHandler;
     private CollapImage collapImage;
     private Indicator indicator;
+    private OnImageCollapListener onImageCollapListener;
+    public void setOnImageCollapListener(OnImageCollapListener onImageCollapListener) {
+        this.onImageCollapListener = onImageCollapListener;
+    }
     public HorizontalCollapImageView(Context context, Bitmap bitmap) {
         super(context);
         this.bitmap = bitmap;
@@ -133,6 +137,14 @@ public class HorizontalCollapImageView extends View{
         }
         public void onAnimationEnd(Animator animator) {
             if(isAnimated) {
+                if(onImageCollapListener != null) {
+                    if (dir == 0) {
+                        onImageCollapListener.onOpen();
+                    }
+                    else {
+                        onImageCollapListener.onClose();
+                    }
+                }
                 dir = dir == 0?1:0;
                 isAnimated = false;
             }
