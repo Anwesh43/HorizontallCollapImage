@@ -37,6 +37,7 @@ public class HorizontalCollapImageView extends View{
             collapImage = new CollapImage();
             indicator = new Indicator();
         }
+        paint.setStrokeCap(Paint.Cap.ROUND);
         paint.setColor(color);
         collapImage.draw(canvas);
         indicator.draw(canvas);
@@ -84,24 +85,24 @@ public class HorizontalCollapImageView extends View{
         private float x,y,r,a = 0;
         public Indicator() {
             x = w/2;
-            y = 5*h/6+h/12;
+            y = 9*h/10-h/6;
             r = h/15;
         }
         public boolean handleTap(float x,float y) {
-            return x>=this.x -r && x<=this.x+r && y>=this.y-r && y<=this.y+r;
+            return x>=this.x -r && x<=this.x+r && y>=this.y+h/12-r && y<=this.y+h/12+r;
         }
         public void draw(Canvas canvas) {
-            paint.setStyle(Paint.Style.FILL);
-            paint.setColor(Color.argb(150,0,0,0));
-            canvas.drawRect(new RectF(w/10,y-h/12,9*h/10,h),paint);
-            paint.setStyle(Paint.Style.STROKE);
-            paint.setColor(Color.GRAY);
-            canvas.drawCircle(x,y,r,paint);
-            paint.setColor(color);
             canvas.save();
             canvas.translate(x,y);
+            paint.setStyle(Paint.Style.FILL);
+            paint.setColor(Color.argb(150,0,0,0));
+            canvas.drawRect(new RectF(-2*w/5,0,2*w/5,h/6),paint);
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setColor(Color.GRAY);
+            canvas.drawCircle(0,h/12,r,paint);
+            paint.setColor(color);
             for(int i=0;i<2;i++) {
-                canvas.drawArc(new RectF(-r, -r, r, r), i*180, a,false, paint);
+                canvas.drawArc(new RectF(-r, h/12-r, r, h/12+r), i*180, a,false, paint);
             }
             canvas.restore();
         }
