@@ -25,9 +25,9 @@ public class HorizontalCollapImageList {
         listLayout = new ListLayout(activity);
         scrollView.addView(listLayout,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
     }
-    public void addImage(Bitmap bitmap) {
+    public void addImage(Bitmap bitmap,OnImageCollapListener onImageCollapListener) {
         if(!isShown) {
-            listLayout.addImage(bitmap);
+            listLayout.addImage(bitmap,onImageCollapListener);
         }
     }
     public void show() {
@@ -52,8 +52,9 @@ public class HorizontalCollapImageList {
                 h = size.y;
             }
         }
-        public void addImage(Bitmap bitmap) {
+        public void addImage(Bitmap bitmap,OnImageCollapListener onImageCollapListener) {
             HorizontalCollapImageView horizontalCollapImageView = new HorizontalCollapImageView(getContext(),bitmap);
+            horizontalCollapImageView.setOnImageCollapListener(onImageCollapListener);
             addView(horizontalCollapImageView,new LayoutParams(9*w/10,9*w/10));
             requestLayout();
         }
