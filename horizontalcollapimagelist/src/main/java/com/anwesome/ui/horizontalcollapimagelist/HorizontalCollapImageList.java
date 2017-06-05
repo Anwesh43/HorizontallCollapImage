@@ -62,7 +62,7 @@ public class HorizontalCollapImageList {
             for(int i=0;i<getChildCount();i++) {
                 View child = getChildAt(i);
                 measureChild(child,wspec,hspec);
-                hMax += (h+h/20);
+                hMax += (child.getMeasuredHeight()+h/20);
             }
             setMeasuredDimension(w,hMax);
         }
